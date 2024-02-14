@@ -66,17 +66,28 @@
                                                     <th class="text-center"> Student Name </th>
                                                     <th class="text-center"> Grade Level & Section/ STRAND </th>
                                                     <th class="text-center"> School Year </th>
+                                                    <th class="text-center"> Actions </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             <?php
                                             include 'connect.php';
-                                            $sql = "SELECT a.*, b.name, CONCAT(d.fname,' ',d.mname,' ',d.lname,' ',d.extension) as fullname, d.lrn, e.grade_level_section, b.name as feename
-            FROM `tbl_payments` as a 
-            LEFT JOIN tbl_fee as b ON a.fee_id = b.id
-            LEFT JOIN tbl_enrollment as c ON a.enrollment_id = c.enrollment_id
-            LEFT JOIN tbl_student as d ON c.student_id = d.student_id
-            LEFT JOIN tbl_grade_level as e ON c.grade_level_id = e.grade_level_id";
+                                            $sql = "SELECT 
+    *, 
+    CONCAT(
+        tbl_student.fname, ' ', 
+        tbl_student.mname, ' ', 
+        tbl_student.lname, ' ', 
+        tbl_student.extension
+    ) AS fullname 
+FROM 
+    tbl_enrollment 
+    INNER JOIN tbl_student ON tbl_student.student_id = tbl_enrollment.student_id 
+    JOIN tbl_payments ON tbl_payments.enrollment_id = tbl_enrollment.enrollment_id 
+    JOIN tbl_grade_level ON tbl_enrollment.grade_level_id = tbl_grade_level.grade_level_id 
+GROUP BY 
+    tbl_enrollment.student_id;
+";
                                             $result = mysqli_query($connect, $sql);
                                             while ($row = mysqli_fetch_array($result)) {
                                                 $sy = $row['schoolyear'];
@@ -107,6 +118,9 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <?php echo $row["schoolyear"]; ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                       <a type="button" target="_blank" class="btn btn-outline-success" href="student_payment_report.php?id=<?=$enrollment_id?>&name=<?=  $row["fullname"]; ?>"><i class="fal fa-print"></i>&nbsp;Print </a>
                                                     </td>
                                                 </tr>
                                                 <?php
