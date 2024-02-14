@@ -1,0 +1,21 @@
+SELECT DISTINCT t1.enrollment_id, t2.student_id, t2.lrn, t2.fname, t2.mname, t2.lname, t2.extension, t3.grade_level, t3.section, t4.sy, t5.offered_subject_id, t5.firstQ, t8.subject_name
+FROM tbl_enrollment AS t1
+INNER JOIN tbl_student AS t2 ON t2.student_id = t1.student_id
+INNER JOIN tbl_grade_level AS t3 ON t3.grade_level_id = t1.grade_level_id
+INNER JOIN tbl_sy AS t4 ON t4.sy_id = t1.sy_id
+INNER JOIN tbl_grade AS t5 ON t5.enrollment_id = t1.enrollment_id
+INNER JOIN tbl_student_subject AS t6 ON t6.student_subject_id = t5.student_subject_id
+INNER JOIN tbl_offered_subject AS t7 ON t7.offered_subject_id = t5.offered_subject_id
+INNER JOIN tbl_subject AS t8 ON t8.subject_id = t7.subject_id
+
+
+SELECT t1.enrollment_id, t2.student_id, t2.lrn, t2.fname, t2.mname, t2.lname, t2.extension, t3.grade_level, t3.section, t4.sy, t5.offered_subject_id, t5.firstQ, t8.subject_name, AVG(t5.firstQ) AS "MAPEH"
+FROM tbl_enrollment AS t1
+INNER JOIN tbl_student AS t2 ON t2.student_id = t1.student_id
+INNER JOIN tbl_grade_level AS t3 ON t3.grade_level_id = t1.grade_level_id
+INNER JOIN tbl_sy AS t4 ON t4.sy_id = t1.sy_id
+INNER JOIN tbl_grade AS t5 ON t5.enrollment_id = t1.enrollment_id
+INNER JOIN tbl_student_subject AS t6 ON t6.student_subject_id = t5.student_subject_id
+INNER JOIN tbl_offered_subject AS t7 ON t7.offered_subject_id = t5.offered_subject_id
+INNER JOIN tbl_subject AS t8 ON t8.subject_id = t7.subject_id
+WHERE t8.subject_name IN ('Music', 'Arts', 'Physical Education', 'Health')

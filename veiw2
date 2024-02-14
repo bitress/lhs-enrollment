@@ -1,0 +1,47 @@
+CREATE VIEW tbl_student_ranking AS
+SELECT grade_all.fname, grade_all.mname, grade_all.lname, grade_all.extension, grade_all.grade_level, grade_all.grade_level_section, grade_all.sy, grade_all.grade_level_id, grade_all.sy_id, grade_all.enrollment_id,
+((grade_all.firstQ+grade_mapeh.firstQ)/9) AS firstquarter_average, 
+((grade_all.secondQ+grade_mapeh.secondQ)/9) AS secondquarter_average, 
+((grade_all.thirdQ+grade_mapeh.thirdQ)/9) AS thirdquarter_average, 
+((grade_all.fourthQ+grade_mapeh.fourthQ)/9) AS fourthquarter_average, 
+((((grade_all.firstQ+grade_mapeh.firstQ)/9)+((grade_all.secondQ+grade_mapeh.secondQ)/9)+((grade_all.thirdQ+grade_mapeh.thirdQ)/9)+((grade_all.fourthQ+grade_mapeh.fourthQ)/9))/4) AS final_average 
+FROM ((SELECT tbl_enrollment.enrollment_id, tbl_student.student_id, tbl_student.fname, tbl_student.mname, tbl_student.lname, tbl_grade_level.grade_level, tbl_grade_level.grade_level_section, tbl_grade_level.grade_level_id, tbl_sy.sy, tbl_sy.sy_id, tbl_student.extension,
+SUM(tbl_grade.firstQ) AS firstQ, 
+SUM(tbl_grade.secondQ) AS secondQ, 
+SUM(tbl_grade.thirdQ) AS thirdQ, 
+SUM(tbl_grade.fourthQ) AS fourthQ, 
+(firstQ+secondQ+thirdQ+fourthQ) AS average FROM tbl_grade INNER JOIN tbl_student_subject ON tbl_grade.student_subject_id = tbl_student_subject.student_subject_id 
+INNER JOIN tbl_student ON tbl_student_subject.student_id = tbl_student.student_id 
+INNER JOIN tbl_offered_subject ON tbl_student_subject.offered_subject_id = tbl_offered_subject.offered_subject_id 
+INNER JOIN tbl_subject ON tbl_offered_subject.subject_id = tbl_subject.subject_id 
+INNER JOIN tbl_enrollment ON tbl_student.student_id = tbl_enrollment.student_id 
+INNER JOIN tbl_grade_level ON tbl_enrollment.grade_level_id = tbl_grade_level.grade_level_id 
+INNER JOIN tbl_sy ON tbl_enrollment.sy_id = tbl_sy.sy_id 
+WHERE tbl_subject.subject_name = 'Filipino' 
+OR tbl_subject.subject_name = 'English' 
+OR tbl_subject.subject_name = 'Science' 
+OR tbl_subject.subject_name = 'Mathematics' 
+OR tbl_subject.subject_name = 'Araling Panlipunan' 
+OR tbl_subject.subject_name = 'Values Education' 
+OR tbl_subject.subject_name = 'Technology and Livelihood Education' 
+OR tbl_subject.subject_name = 'Computer Education' 
+GROUP by tbl_enrollment.enrollment_id) AS grade_all 
+INNER JOIN (SELECT tbl_enrollment.enrollment_id, tbl_grade.grade_id, tbl_student.student_id, 
+ROUND(AVG(tbl_grade.firstQ)) AS firstQ, 
+ROUND(AVG(tbl_grade.secondQ)) AS secondQ, 
+ROUND(AVG(tbl_grade.thirdQ)) AS thirdQ, 
+ROUND(AVG(tbl_grade.fourthQ)) AS fourthQ, 
+ROUND(AVG (firstQ+secondQ+thirdQ+fourthQ)) AS average 
+FROM tbl_grade 
+INNER JOIN tbl_student_subject ON tbl_grade.student_subject_id = tbl_student_subject.student_subject_id 
+INNER JOIN tbl_student ON tbl_student_subject.student_id = tbl_student.student_id 
+INNER JOIN tbl_offered_subject ON tbl_student_subject.offered_subject_id = tbl_offered_subject.offered_subject_id 
+INNER JOIN tbl_subject ON tbl_offered_subject.subject_id = tbl_subject.subject_id 
+INNER JOIN tbl_enrollment ON tbl_student.student_id = tbl_enrollment.student_id 
+WHERE tbl_subject.subject_name = 'Music' 
+OR tbl_subject.subject_name = 'Arts' 
+OR tbl_subject.subject_name = 'Physical Education' 
+OR tbl_subject.subject_name = 'Health' 
+GROUP by tbl_enrollment.enrollment_id 
+ORDER BY firstQ  DESC) AS grade_mapeh ON grade_mapeh.student_id = grade_all.student_id)  
+ORDER BY `grade_all`.`grade_level` ASC
