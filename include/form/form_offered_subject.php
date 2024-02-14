@@ -123,6 +123,11 @@
                             <input type="text" name="hrsWeek" id="hrsWeek" class="form-control" onkeyup="numbersonly(this)" required>
                         </div>
                         
+                        <div class="col-md-12 mb-3">
+                            <label for="">No. of Units:</label>
+                            <input type="text" name="units" id="units" class="form-control" onkeyup="numbersonly(this)" required>
+                        </div>
+                        
                     </div>
                     <div class="modal-footer">
                         <!--<button type="button" id="closeBtn" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-ban"></i> Close</button>-->
@@ -260,6 +265,11 @@
                             <label for="">No. of Hours/Week:</label>
                             <input type="text" name="hrsWeek" id="hrsWeek_e" class="form-control" onkeyup="numbersonly(this)" required>
                         </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label for="">No. of Units:</label>
+                            <input type="text" name="units" id="units_e" class="form-control" onkeyup="numbersonly(this)" required>
+                        </div>
                         
                     </div>
                     <div class="modal-footer">
@@ -308,6 +318,11 @@
                         <label for="">School Year:</label>
                         <input type="text" name="subject_name" id="subject_name_v" class="form-control" onkeyup="numbersonly(this)" disabled>
                     </div>
+
+                    <div class=" mb-3">
+                            <label for="">No. of Units:</label>
+                            <input type="text" name="units" id="units_v" class="form-control" onkeyup="numbersonly(this)" required>
+                        </div>
 
                 </div>
                 <div class="modal-footer">

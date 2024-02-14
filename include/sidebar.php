@@ -219,6 +219,11 @@
                     <span>Payments</span></a>
             </li>
         <li class="nav-item">
+        <a class="nav-link" href="manage_tuition_fees.php">
+            <i class="fas fa-fw fa-file"></i>
+            <span>Tuition Fees</span></a>
+            </li>
+        <li class="nav-item">
         <a class="nav-link" href="manage_fee.php">
             <i class="fas fa-fw fa-file"></i>
             <span>Fees</span></a>
@@ -227,6 +232,11 @@
                 <a class="nav-link" href="payment_history.php">
                     <i class="fas fa-fw fa-money-bill"></i>
                     <span>Payment History</span></a>
+            </li>
+                <li class="nav-item">
+                <a class="nav-link" href="cashier_reports.php">
+                    <i class="fas fa-fw fa-money-bill"></i>
+                    <span>Cashier Reports</span></a>
             </li>
 
             <!-- Nav Item - Fundamentals Menu -->

@@ -83,6 +83,48 @@
                                                         $enrollment_id = $row['enrollment_id'];
 
 
+                                                        $tuitionFeeQuery = "SELECT 
+    tbl_student.lrn,
+    tbl_enrollment.enrollment_id,
+    tbl_student.student_id,
+    tbl_student.fname,
+    tbl_student.mname,
+    tbl_student.lname,
+    tbl_student.extension,
+    t4.sy,
+    tbl_grade_level.grade_level,
+    GROUP_CONCAT(tbl_subject.subject_name SEPARATOR ', ') AS subjects,
+    COUNT(tbl_subject.subject_id) AS num_subjects,
+    SUM(tbl_offered_subject.units) AS total_units
+FROM 
+    tbl_student_subject 
+INNER JOIN 
+    tbl_offered_subject ON tbl_offered_subject.offered_subject_id = tbl_student_subject.offered_subject_id 
+INNER JOIN 
+    tbl_subject ON tbl_subject.subject_id = tbl_offered_subject.subject_id 
+INNER JOIN 
+    tbl_enrollment ON tbl_enrollment.enrollment_id = tbl_student_subject.enrollment_id 
+INNER JOIN 
+    tbl_student ON tbl_student.student_id = tbl_student_subject.student_id 
+INNER JOIN 
+    tbl_grade_level ON tbl_grade_level.grade_level_id = tbl_enrollment.grade_level_id 
+INNER JOIN 
+    tbl_sy AS t4 ON t4.sy_id = tbl_enrollment.sy_id 
+WHERE
+        tbl_enrollment.enrollment_id = '$enrollment_id'
+    GROUP BY 
+        tbl_student.student_id;";
+
+                                                        $tuitionFeeQuery_run = mysqli_query($connect, $tuitionFeeQuery);
+
+                                                        if ($tuitionFeeQuery_run && mysqli_num_rows($tuitionFeeQuery_run) > 0) {
+                                                            $r = mysqli_fetch_assoc($tuitionFeeQuery_run);
+                                                            $tuitionFeePayment = $r['total_units'] * 150;
+                                                        }
+
+
+
+
                                                         // ============COLLECTION PAYMENT====================//
                                                        
                                                         $collectionSql = "SELECT SUM(a.collect) as collection FROM tbl_fee as a 
@@ -97,7 +139,7 @@
                                                         $payment = mysqli_fetch_assoc($result3)['totalpayment'];
                                                         $payment = $payment>1 ? $payment : 0;   
 
-                                                        $totalbal = $collection-$payment;
+                                                        $totalbal = ($tuitionFeePayment + $collection) -$payment;
 
                                                 ?>
 

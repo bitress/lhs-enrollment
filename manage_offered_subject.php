@@ -64,6 +64,7 @@
                                                 <tr>
                                                     <th class="text-center"> Teacher </th>
                                                     <th class="text-center"> Subject </th>
+                                                    <th class="text-center"> Units </th>
                                                     <th class="text-center"> Grade Level and Section </th>
                                                     <th class="text-center"> School Year </th>
                                                     <th class="text-center"> Action </th>
@@ -72,7 +73,7 @@
                                             <tbody>
                                                 <?php
                                                     include 'connect.php';
-                                                    $sql = "SELECT t1.offered_subject_id, t2.faculty_id, t2.honorifics, t2.fname, t2.mname, t2.lname, t2.title, t3.subject_id, t3.subject_name, t4.grade_level_id, t4.grade_level, t4.section, t4.grade_level_section, t5.sy_id, t5.sy
+                                                    $sql = "SELECT t1.units, t1.offered_subject_id, t2.faculty_id, t2.honorifics, t2.fname, t2.mname, t2.lname, t2.title, t3.subject_id, t3.subject_name, t4.grade_level_id, t4.grade_level, t4.section, t4.grade_level_section, t5.sy_id, t5.sy
                                                         FROM tbl_offered_subject AS t1
                                                         INNER JOIN tbl_faculty AS t2 ON t2.faculty_id = t1.faculty_id
                                                         INNER JOIN tbl_subject AS t3 ON t3.subject_id = t1.subject_id
@@ -90,6 +91,9 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <?php echo $row["subject_name"] ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?php echo $row["units"] ?>
                                                     </td>
                                                     <td class="text-center text-capitalize">
                                                         <?php echo $row["grade_level_section"] ?>
@@ -267,6 +271,7 @@
                         $('#sy_id_e').val(res.data.sy_id);
                         $('#hrsSem_e').val(res.data.hrsSem);
                         $('#hrsWeek_e').val(res.data.hrsWeek);
+                        $('#units_e').val(res.data.units);
 
                         $('#editOfferedSubjectForm').slideDown("slow");
 

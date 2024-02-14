@@ -10,6 +10,7 @@ if(isset($_POST['save_offered_subject']))
     $sy_id = mysqli_real_escape_string($connect, $_POST['sy_id']);
     $hrsSem = mysqli_real_escape_string($connect, $_POST['hrsSem']);
     $hrsWeek = mysqli_real_escape_string($connect, $_POST['hrsWeek']);
+    $units = mysqli_real_escape_string($connect, $_POST['units']);
  
     if($faculty_id == NULL || $subject_id == NULL || $grade_level_id == NULL || $sy_id == NULL)
     {
@@ -32,8 +33,8 @@ if(isset($_POST['save_offered_subject']))
         return;
 
     }else{*/
-        $query = "INSERT INTO tbl_offered_subject (faculty_id, subject_id, grade_level_id, sy_id, hrsSem, hrsWeek) 
-                  VALUES ('$faculty_id', '$subject_id', '$grade_level_id', '$sy_id', '$hrsSem', '$hrsWeek')";
+        $query = "INSERT INTO tbl_offered_subject (faculty_id, subject_id, grade_level_id, sy_id, hrsSem, hrsWeek, units) 
+                  VALUES ('$faculty_id', '$subject_id', '$grade_level_id', '$sy_id', '$hrsSem', '$hrsWeek', '$units')";
         $query_run = mysqli_query($connect, $query);
 
         if($query_run)
@@ -68,6 +69,7 @@ if(isset($_POST['update_offered_subject']))
     $sy_id = mysqli_real_escape_string($connect, $_POST['sy_id']);
     $hrsSem = mysqli_real_escape_string($connect, $_POST['hrsSem']);
     $hrsWeek = mysqli_real_escape_string($connect, $_POST['hrsWeek']);
+    $units = mysqli_real_escape_string($connect, $_POST['units']);
 
     if($faculty_id == NULL || $grade_level_id == NULL || $sy_id == NULL)
     {
@@ -79,7 +81,7 @@ if(isset($_POST['update_offered_subject']))
         return;
     }
 
-    $query = "UPDATE tbl_offered_subject SET faculty_id='$faculty_id', grade_level_id='$grade_level_id', sy_id='$sy_id', hrsSem='$hrsSem', hrsWeek='$hrsWeek'
+    $query = "UPDATE tbl_offered_subject SET faculty_id='$faculty_id', grade_level_id='$grade_level_id', sy_id='$sy_id', hrsSem='$hrsSem', hrsWeek='$hrsWeek', units = '$units'
                 WHERE offered_subject_id='$offered_subject_id'";
     $query_run = mysqli_query($connect, $query);
 
