@@ -63,6 +63,7 @@
                                                     <th class="text-center"> Grade Level & Section/ STRAND </th>
                                                     <th class="text-center"> School Year </th>
                                                     <th class="text-center"> Total Balance </th>
+                                                    <th class="text-center"> Status </th>
                                                     <th class="text-center"> Action </th>
                                                 </tr>
                                             </thead>
@@ -126,7 +127,7 @@ WHERE
 
 
                                                         // ============COLLECTION PAYMENT====================//
-                                                       
+
                                                         $collectionSql = "SELECT SUM(a.collect) as collection FROM tbl_fee as a 
                                                         WHERE a.gradelevel = '$grade_level' 
                                                         AND a.schoolyear = '$sy'";
@@ -137,9 +138,26 @@ WHERE
                                                         $paymentSql = "SELECT *,SUM(payment) as totalpayment FROM `tbl_payments` WHERE `enrollment_id` = '$enrollment_id'";
                                                         $result3 = mysqli_query($connect, $paymentSql);
                                                         $payment = mysqli_fetch_assoc($result3)['totalpayment'];
-                                                        $payment = $payment>1 ? $payment : 0;   
+//                                                        $payment = $payment > 1 ? $payment : 0;
 
-                                                        $totalbal = ($tuitionFeePayment + $collection) -$payment;
+
+                                                        $totalCollection = $tuitionFeePayment + $collection;
+
+                                                        $totalbal = ($totalCollection) - $payment;
+
+                                                        if ($payment == 0) {
+                                                            $status = '<span class="badge badge-warning">Not Paid</span>';
+                                                        } else if ($payment >= $totalCollection) {
+                                                            $status = '<span class="badge badge-success">Paid</span>';
+                                                        } else if ($payment >0) {
+                                                            $status = '<span class="badge badge-info">Pending</span>';
+                                                        } else {
+                                                            $status = "idk";
+                                                        }
+//
+//                                                        echo "Total balance: ". $totalbal . '<br>';
+//                                                        echo "Total payment: ".$payment. '<br>';
+//                                                        echo "Total collection: ".$totalCollection. '<br><br><br>';
 
                                                 ?>
 
@@ -160,6 +178,9 @@ WHERE
                                                         P<?php echo number_format($totalbal,2) ?>
                                                     </td>
                                                     <td class="text-center">
+                                                        <?php echo $status ?>
+                                                    </td>
+                                                    <td class="text-center">
                                                         <div class="btn-group">
                                                             <?php
                                                             if($totalbal>0){
@@ -171,11 +192,11 @@ WHERE
                                                             ?>
                                                         </div>
 
-                                                      
+
                                                     </td>
                                                 </tr>
 
-                                                <?php 
+                                                <?php
                                                     }
                                                 ?>
                                             </tbody>

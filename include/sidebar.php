@@ -235,7 +235,7 @@
             </li>
                 <li class="nav-item">
                 <a class="nav-link" href="cashier_reports.php">
-                    <i class="fas fa-fw fa-money-bill"></i>
+                    <i class="fal fa-fw fa-file-chart-pie"></i>
                     <span>Cashier Reports</span></a>
             </li>
 

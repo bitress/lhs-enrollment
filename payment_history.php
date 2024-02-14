@@ -49,76 +49,70 @@
                     <div class="container mt-4 mb-5">
                         <div class="row">
                             <div class="col-md-12">
+                                <div class="d-flex mb-2">
+                                    <a href="payment_history_report.php" target="_blank" class="btn btn-success"><i class="fal fa-print"></i>&nbsp;Print</a>
+                                </div>
                                 <div class="card shadow">
                                     <div class="card-header">
                                         <h4><i class="fas fa-award"></i> Payment History
                                         </h4>
                                     </div>
                                     <div class="card-body table-responsive">
-                                        <table id="myTable" class="table table-bordered table-hover">
+
+                                        <table id="myTable" class="display table table-bordered table-hover">
                                             <thead class="table-primary">
                                                 <tr>
                                                     <th class="text-center"> LRN </th>
                                                     <th class="text-center"> Student Name </th>
                                                     <th class="text-center"> Grade Level & Section/ STRAND </th>
                                                     <th class="text-center"> School Year </th>
-                                                    <th class="text-center"> OR Number </th>
-                                                    <th class="text-center"> Payment </th>
-                                                    <th class="text-center"> Date & Time </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php
-                                                    include 'connect.php';
-                                                    $sql = "SELECT a.*,
-                                                            b.name,
-                                                            CONCAT(d.fname,' ',d.mname,' ',d.lname,' ',d.extension) as fullname,d.lrn,
-                                                            e.grade_level_section,b.name as feename
-                                                            FROM `tbl_payments` as a 
-                                                            LEFT JOIN tbl_fee as b 
-                                                            ON a.fee_id = b.id
-                                                            LEFT JOIN tbl_enrollment as c 
-                                                            ON a.enrollment_id = c.enrollment_id
-                                                            LEFT JOIN tbl_student as d 
-                                                            ON c.student_id = d.student_id
-                                                            LEFT JOIN tbl_grade_level as e 
-                                                            ON c.grade_level_id = e.grade_level_id";
-                                                    $result = mysqli_query($connect, $sql);
-                                                    while ($row = mysqli_fetch_array($result)) {
+                                            <?php
+                                            include 'connect.php';
+                                            $sql = "SELECT a.*, b.name, CONCAT(d.fname,' ',d.mname,' ',d.lname,' ',d.extension) as fullname, d.lrn, e.grade_level_section, b.name as feename
+            FROM `tbl_payments` as a 
+            LEFT JOIN tbl_fee as b ON a.fee_id = b.id
+            LEFT JOIN tbl_enrollment as c ON a.enrollment_id = c.enrollment_id
+            LEFT JOIN tbl_student as d ON c.student_id = d.student_id
+            LEFT JOIN tbl_grade_level as e ON c.grade_level_id = e.grade_level_id";
+                                            $result = mysqli_query($connect, $sql);
+                                            while ($row = mysqli_fetch_array($result)) {
+                                                $sy = $row['schoolyear'];
+                                                $enrollment_id = $row['enrollment_id'];
 
-                                                        $sy = $row['schoolyear'];
-                                                        $enrollment_id = $row['enrollment_id'];
-
-
+                                                // Fetch all payments for the current student
+                                                $student_payments = array();
+                                                $payment_sql = "SELECT or_number, payment, datetime FROM tbl_payments WHERE enrollment_id = $enrollment_id";
+                                                $payment_result = mysqli_query($connect, $payment_sql);
+                                                while ($payment_row = mysqli_fetch_array($payment_result)) {
+                                                    $student_payments[] = array(
+                                                        "or_number" => $payment_row['or_number'],
+                                                        "payment" => $payment_row['payment'],
+                                                        "date" => $payment_row['datetime']
+                                                    );
+                                                }
+                                                $json_student_payments = json_encode($student_payments);
                                                 ?>
-
-                                                <tr>
+                                                <tr data-child='<?php echo $json_student_payments; ?>'>
                                                     <td class="text-center">
-                                                        <?php echo $row["lrn"] ?>
+                                                        <?php echo $row["lrn"]; ?>
                                                     </td>
                                                     <td class="text-center">
-                                                        <?php echo $row["fullname"] ?> 
+                                                        <?php echo $row["fullname"]; ?>
                                                     </td>
                                                     <td class="text-center">
-                                                        <?php echo $row["grade_level_section"] ?>
+                                                        <?php echo $row["grade_level_section"]; ?>
                                                     </td>
                                                     <td class="text-center">
-                                                        <?php echo $row["schoolyear"] ?>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <?php echo $row["or_number"] ?>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        P<?php echo number_format($row['payment'],2) ?>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <?php echo $row['datetime'] ?>
+                                                        <?php echo $row["schoolyear"]; ?>
                                                     </td>
                                                 </tr>
+                                                <?php
+                                            }
+                                            ?>
 
-                                                <?php 
-                                                    }
-                                                ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -168,7 +162,43 @@
     <!-- DataTable -->
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            var parentTable = $('#myTable').DataTable({
+                "columnDefs": [{
+                    "targets": [0],
+                    "orderable": false
+                }]
+            });
+
+            $('#myTable tbody').on('click', 'tr', function() {
+                var tr = $(this).closest('tr');
+                var row = parentTable.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Open this row
+                    var childData = JSON.parse(tr.attr('data-child').replace(/'/g, '"'));
+                    var childTable = createChildTable(childData);
+                    row.child(childTable).show();
+                    tr.addClass('shown');
+                }
+            });
+
+            function createChildTable(data) {
+                var childTable = $('<table>').addClass('display').append('<thead><tr><th>OR Number</th><th>Payment</th><th>Date</th></tr></thead><tbody>');
+
+                for (var i = 0; i < data.length; i++) {
+                    var row = $('<tr>');
+                    row.append('<td>' + data[i].or_number + '</td>');
+                    row.append('<td>' + data[i].payment + '</td>');
+                    row.append('<td>' + data[i].date + '</td>');
+                    childTable.append(row);
+                }
+
+                return childTable;
+            }
         });
     </script>
 
