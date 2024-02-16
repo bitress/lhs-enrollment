@@ -120,7 +120,11 @@ GROUP BY
                                                         <?php echo $row["schoolyear"]; ?>
                                                     </td>
                                                     <td class="text-center">
-                                                       <a type="button" target="_blank" class="btn btn-outline-success" href="student_payment_report.php?id=<?=$enrollment_id?>&name=<?=  $row["fullname"]; ?>"><i class="fal fa-print"></i>&nbsp;Print </a>
+                                                        <div class="btn-group">
+                                                            <a type="button" target="_blank" class="btn btn-outline-success" href="student_payment_report.php?id=<?=$enrollment_id?>&name=<?=  $row["fullname"]; ?>"><i class="fal fa-print"></i>&nbsp;Print </a>
+                                                            <a type="button" target="_blank" class="btn btn-outline-success" href="qr_code.php?id=<?=$enrollment_id?>&sy=<?= $sy ?>&grade_level=<?= $row['grade_level']; ?>"><i class="fal fa-qrcode"></i>&nbsp;QR </a>
+
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <?php

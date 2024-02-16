@@ -372,6 +372,11 @@ WHERE
 
                     $('#studentTotalBalance').val(response.totalBalance.toFixed(2));
 
+                    $("#studentPayment").attr({
+                        "max" : response.totalBalance,
+                        "min" : 100
+                    });
+
 
                     // var feesInfo = response.fees_info;
                     // $.each(feesInfo, function(index, fee) {
@@ -409,6 +414,14 @@ WHERE
         var form = $('#save_payment')[0]; // Get the form element
         var formData = new FormData(form);
         formData.append("save_payment", true);
+
+        var paymentValue = parseInt($('#studentPayment').val());
+        var maxPayment = parseInt($('#studentPayment').attr('max'));
+
+        if (paymentValue > maxPayment){
+            alert("Payment Exceeded");
+            return false;
+        }
 
         $.ajax({
             type: "POST",

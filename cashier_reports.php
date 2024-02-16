@@ -48,56 +48,22 @@ include 'include/topSection.php';
                 <div class="container mt-4 mb-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="d-flex mb-2">
-                                <a href="cashier_reports_print.php" target="_blank" class="btn btn-success"><i class="fal fa-print"></i>&nbsp;Print</a>
-                            </div>
                             <div class="card shadow">
-                                <div class="card-header">
-                                    <h4><i class="fas fa-list"></i> Collection per day
-                                    </h4>
-                                </div>
-                                <div class="card-body table-responsive">
-                                    <table id="myTable" class="table table-bordered table-hover">
-                                        <thead class="table-primary">
-                                        <tr>
-                                            <th class="text-center"> Date </th>
-                                            <th class="text-center"> Amount Collected </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-                                        include 'connect.php';
-                                        $sql = "SELECT
-                                    DATE(datetime) AS payment_date,
-                                    SUM(payment) AS total_collection
-                                FROM
-                                    tbl_payments
-                                GROUP BY
-                                    DATE(datetime)
-                                ORDER BY
-                                    payment_date DESC;
-                                ";
-                                $result = mysqli_query($connect, $sql);
-
-                                        while ($row = mysqli_fetch_array($result)) {
-
-                                            ?>
-
-                                            <tr>
-                                                <td class="text-center">
-                                                    <?php echo $row['payment_date'] ?>
-                                                </td>
-                                                <td class="text-center">
-                                                    <?php echo $row['total_collection'] ?>
-                                                </td>
-
-                                            </tr>
-
-                                            <?php
-                                        }
-                                        ?>
-                                        </tbody>
-                                    </table>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="grade_level">Grade Level</label>
+                                        <select id="grade_level" class="form-control">
+                                            <option selected disabled>Select Grade Level</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="grade_level">What do you want to report?</label>
+                                        <select id="grade_level" class="form-control">
+                                            <option selected disabled>What do you want to report?</option>
+                                            <option value="collection_per_day">Collection Per Day</option>
+                                            <option value="collection_per_day">Student Balance</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
