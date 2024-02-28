@@ -122,8 +122,7 @@ GROUP BY
                                                     <td class="text-center">
                                                         <div class="btn-group">
                                                             <a type="button" target="_blank" class="btn btn-outline-success" href="student_payment_report.php?id=<?=$enrollment_id?>&name=<?=  $row["fullname"]; ?>"><i class="fal fa-print"></i>&nbsp;Print </a>
-                                                            <a type="button" target="_blank" class="btn btn-outline-success" href="qr_code.php?id=<?=$enrollment_id?>&sy=<?= $sy ?>&grade_level=<?= $row['grade_level']; ?>"><i class="fal fa-qrcode"></i>&nbsp;QR </a>
-
+                                                            <a type="button"  data-target="#exampleModal"  class="btn btn-outline-success open-qrcode" data-link="https://ispsctagudinlhs.net/student_payment_report.php?id=<?=$enrollment_id?>&name=<?=  $row["fullname"]; ?>"><i class="fal fa-qrcode"></i>&nbsp;QR </a>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -167,6 +166,23 @@ GROUP BY
     <!-- Logout Modal-->
     <?php include 'include/logout.php'; ?>
 
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="qrcode" style="display: flex; justify-content: center; align-items: center;"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
     <!-- Alertify -->
@@ -177,8 +193,27 @@ GROUP BY
     <!-- Include SweetAlert 2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.all.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
     <!-- DataTable -->
     <script type="text/javascript">
+        $(document).ready(function(){
+            $('.open-qrcode').click(function(){
+                var qrData = $(this).data('link');
+                document.getElementById("qrcode").innerHTML = ''
+                $('#exampleModal').modal('show');
+                generateQRCode(qrData);
+            });
+
+            function generateQRCode(data) {
+                var qrcode = new QRCode(document.getElementById("qrcode"), {
+                    text: data,
+                    width: 300,
+                    height: 300,
+                });
+
+            }
+        });
+
         $(document).ready(function() {
             var parentTable = $('#myTable').DataTable({
                 "columnDefs": [{

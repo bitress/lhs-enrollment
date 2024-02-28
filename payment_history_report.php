@@ -111,11 +111,45 @@
             cursor: pointer;
         }
 
+        .header-container {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo {
+            width: 70px;
+            height: auto;
+        }
+        .column {
+            margin-left: 20px; /* Adjust spacing between logo and text */
+            text-align: left;
+        }
+        h3, h4 {
+            margin: 5px 0;
+            color: #333;
+        }
+
 
 
     </style>
 </head>
 <body>
+
+<div class="header-container">
+    <header>
+        <img src="https://dev.bitress.xyz/ispsc-tagudin-website/assets/img/ispsc_logo.png" alt="Logo" class="logo">
+        <div class="column">
+            <h3>Ilocos Sur Polytechnic State College</h3>
+            <h4>Laboratory High School</h4>
+        </div>
+    </header>
+</div>
+
 <table>
     <caption>Payment History Summary</caption>
     <thead>

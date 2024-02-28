@@ -1,5 +1,5 @@
 <?php
-
+// QR Code data
 include_once 'connect.php';
 
 

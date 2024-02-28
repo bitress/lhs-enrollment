@@ -155,10 +155,7 @@ WHERE
                                                             $status = "idk";
                                                         }
 //
-//                                                        echo "Total balance: ". $totalbal . '<br>';
-//                                                        echo "Total payment: ".$payment. '<br>';
-//                                                        echo "Total collection: ".$totalCollection. '<br><br><br>';
-
+//
                                                 ?>
 
                                                 <tr>
@@ -175,7 +172,7 @@ WHERE
                                                         <?php echo $row["sy"] ?>
                                                     </td>
                                                     <td class="text-center">
-                                                        P<?php echo number_format($totalbal,2) ?>
+                                                        P<?php echo number_format($totalbal, 2) ?>
                                                     </td>
                                                     <td class="text-center">
                                                         <?php echo $status ?>
@@ -282,9 +279,23 @@ WHERE
                     <div class="row">
 
 
-                        <div class="col-md-12">
+                        <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="studentTotalBalance">Total Balance</label>
+                                <label for="studentTuitionBalance">Tuition Fee</label>
+                                <input type="text" readonly id="studentTuitionBalance" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="studentMiscellaneousBalance">Miscellaneous Fee</label>
+                                <input type="text" readonly id="studentMiscellaneousBalance" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="studentTotalBalance">Total Fee</label>
                                 <input type="text" readonly id="studentTotalBalance" class="form-control">
                             </div>
                         </div>
@@ -310,6 +321,17 @@ WHERE
                                 <input type="text" name="studentPayment"  id="studentPayment" class="form-control">
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="whatToPay">What to Pay?</label>
+                                <select name="whatToPay"  id="whatToPay" class="form-control">
+                                    <option value="Tuition Fee">Tuition Fee</option>
+                                    <option value="Miscellaneous Fee">Miscellaneous Fee</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <button type="button" id="processPaymentBtn" class="btn btn-success">Process Payment</button>
@@ -371,6 +393,8 @@ WHERE
                     $('#enrollment_id').val(enrollmentInfo.enrollment_id);
 
                     $('#studentTotalBalance').val(response.totalBalance.toFixed(2));
+                    $('#studentTuitionBalance').val(response.tuitionFeeBalance.toFixed(2));
+                    $('#studentMiscellaneousBalance').val(response.miscellaneousFeeBalance.toFixed(2));
 
                     $("#studentPayment").attr({
                         "max" : response.totalBalance,
@@ -378,19 +402,6 @@ WHERE
                     });
 
 
-                    // var feesInfo = response.fees_info;
-                    // $.each(feesInfo, function(index, fee) {
-                    //     var feeIdInput = $('<input>').attr({ type: 'hidden', name: 'feeid[]', value: 0, class: 'form-control'});
-                    //     var paymentInput = $('<input>').attr({ type: 'hidden', name: 'payment[]', placeholder: 'Payment Amount', value: 0, class: 'form-control'});
-                    //     $('#feesContainer').append( feeIdInput, paymentInput);
-                    // });
-
-
-                    // var totalBalance = 0;
-                    // $.each(response.fees_info, function(index, fee) {
-                    //     totalBalance += parseFloat(fee.collect);
-                    // });
-                    // $('#studentTotalBalance').val(totalBalance.toFixed(2));
 
                     $('#paymentModal').modal('show');
                 },

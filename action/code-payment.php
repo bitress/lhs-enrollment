@@ -90,39 +90,55 @@ if(isset($_POST['enrollmentid']))
 
         if ($tuitionFeeQuery_run && mysqli_num_rows($tuitionFeeQuery_run) > 0) {
             $r = mysqli_fetch_assoc($tuitionFeeQuery_run);
-                $tuitionFeePayment = $r['total_units'] * 150;
+            $tuitionFeeBalance = $r['total_units'] * 150;
         }
 
 
         $paymentQuery = "SELECT * FROM tbl_payments WHERE enrollment_id = '$enrollmentid' AND schoolyear = '$schoolyear'";
         $paymentQuery_run = mysqli_query($connect, $paymentQuery);
         $totalPayment = 0;
+        $tuitionFeePayment = 0;
+        $miscellaneousFeePayment = 0;
         if ($paymentQuery_run && mysqli_num_rows($paymentQuery_run) > 0) {
 
             while ($res = mysqli_fetch_assoc($paymentQuery_run)) {
+
+                if ($res['fee_name'] == 'Tuition Fee'){
+                    $tuitionFeePayment += $res['payment'];
+                }
+
+                if ($res['fee_name'] == 'Miscellaneous Fee'){
+                    $miscellaneousFeePayment += $res['payment'];
+                }
+
                 $totalPayment += $res['payment'];
             }
         }
         $feesQuery = "SELECT * FROM tbl_fee WHERE gradelevel = '$gradelevel' AND schoolyear = '$schoolyear'";
         $feesQuery_run = mysqli_query($connect, $feesQuery);
-        $balance = 0;
+        $miscellaneousFeeBalance = 0;
 
         if ($feesQuery_run && mysqli_num_rows($feesQuery_run) > 0) {
             $feesData = array();
 
             while ($row = mysqli_fetch_assoc($feesQuery_run)) {
-                $balance += $row['collect'];
+                $miscellaneousFeeBalance += $row['collect'];
             }
         }
-        $totalBalance =  ($tuitionFeePayment + $balance)  - $totalPayment;
 
+        $totalBalance =  ($tuitionFeeBalance + $miscellaneousFeeBalance)  - $totalPayment;
+
+        $totalTuitionBalance = $tuitionFeeBalance - $tuitionFeePayment;
+        $totalMiscellaneousFeeBalance = $miscellaneousFeeBalance - $miscellaneousFeePayment;
 
         $res = array(
             'status' => 200,
             'message' => 'Payment Fetch Successfully by id',
             'student_info' => $studentData,
             'enrollment_info' => $enrollmentData,
-            "totalBalance" => $totalBalance
+            "totalBalance" => $totalBalance,
+            "tuitionFeeBalance" => $totalTuitionBalance,
+            "miscellaneousFeeBalance" => $totalMiscellaneousFeeBalance
         );
         echo json_encode($res);
         return;
@@ -143,9 +159,10 @@ else if(isset($_POST['save_payment']))
           $or_number = mysqli_real_escape_string($connect, $_POST['ORNumber']);
           $dateProcess = mysqli_real_escape_string($connect,  $_POST['dateProcess']);
         $payment = mysqli_real_escape_string($connect, $_POST['studentPayment']);
+        $whatToPay = $_POST['whatToPay'];
 
         //sql query for enrollment
-        $query = "INSERT INTO `tbl_payments` (`enrollment_id`, `or_number`, `payment`, `datetime`, `schoolyear`) VALUES ('$enrollment_id', '$or_number', '$payment', '$dateProcess', '$schoolyear')";
+        $query = "INSERT INTO `tbl_payments` (`enrollment_id`, `fee_name`, `or_number`, `payment`, `datetime`, `schoolyear`) VALUES ('$enrollment_id', '$whatToPay', '$or_number', '$payment', '$dateProcess', '$schoolyear')";
         $query_run = mysqli_query($connect, $query);
 
 

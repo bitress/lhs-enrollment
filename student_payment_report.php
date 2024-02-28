@@ -44,6 +44,7 @@
             line-height: 24px;
             font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
             color: #555;
+            margin-top: 20px;
         }
 
         .invoice-box table {
@@ -112,10 +113,45 @@
                 text-align: center;
             }
         }
+
+        .header-container {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo {
+            width: 70px;
+            height: auto;
+        }
+        .column {
+            margin-left: 20px; /* Adjust spacing between logo and text */
+            text-align: left;
+        }
+        h3, h4 {
+            margin: 5px 0;
+            color: #333;
+        }
+
     </style>
 </head>
 
 <body>
+
+<div class="header-container">
+    <header>
+        <img src="https://dev.bitress.xyz/ispsc-tagudin-website/assets/img/ispsc_logo.png" alt="Logo" class="logo">
+        <div class="column">
+            <h3>Ilocos Sur Polytechnic State College</h3>
+            <h4>Laboratory High School</h4>
+        </div>
+    </header>
+</div>
+
 
 <div class="invoice-box">
     <table>
@@ -137,6 +173,7 @@
         <tr class="heading">
             <td>OR Number</td>
             <td>Amount</td>
+            <td>Fee Name</td>
             <td>Date</td>
         </tr>
 
@@ -145,7 +182,7 @@
         $enrollment_id = $_GET['id'];
 
         include 'connect.php';
-        $payment_sql = "SELECT or_number, payment, datetime FROM tbl_payments WHERE enrollment_id = $enrollment_id";
+        $payment_sql = "SELECT or_number, payment, fee_name, datetime FROM tbl_payments WHERE enrollment_id = $enrollment_id";
         $payment_result = mysqli_query($connect, $payment_sql);
         $total = 0;
         while ($payment_row = mysqli_fetch_array($payment_result)):
@@ -156,6 +193,7 @@
         <tr class="item">
             <td><?= $payment_row['or_number'] ?></td>
             <td><?= $payment_row['payment'] ?></td>
+            <td><?= $payment_row['fee_name'] ?></td>
             <td><?= $payment_row['datetime'] ?></td>
         </tr>
             <?php endwhile; ?>
