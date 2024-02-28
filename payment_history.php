@@ -95,13 +95,14 @@ GROUP BY
 
                                                 // Fetch all payments for the current student
                                                 $student_payments = array();
-                                                $payment_sql = "SELECT or_number, payment, datetime FROM tbl_payments WHERE enrollment_id = $enrollment_id";
+                                                $payment_sql = "SELECT * FROM tbl_payments WHERE enrollment_id = $enrollment_id";
                                                 $payment_result = mysqli_query($connect, $payment_sql);
                                                 while ($payment_row = mysqli_fetch_array($payment_result)) {
                                                     $student_payments[] = array(
                                                         "or_number" => $payment_row['or_number'],
                                                         "payment" => $payment_row['payment'],
-                                                        "date" => $payment_row['datetime']
+                                                        "date" => $payment_row['datetime'],
+                                                        "fee_name" => $payment_row['fee_name']
                                                     );
                                                 }
                                                 $json_student_payments = json_encode($student_payments);
@@ -239,12 +240,13 @@ GROUP BY
                 }
             });
 
-            function createChildTable(data) {
-                var childTable = $('<table>').addClass('display').append('<thead><tr><th>OR Number</th><th>Payment</th><th>Date</th></tr></thead><tbody>');
+                function createChildTable(data) {
+                var childTable = $('<table>').addClass('display').append('<thead><tr><th>OR Number</th><th>Fee Name</th><th>Payment</th><th>Date</th></tr></thead><tbody>');
 
                 for (var i = 0; i < data.length; i++) {
                     var row = $('<tr>');
                     row.append('<td>' + data[i].or_number + '</td>');
+                    row.append('<td>' + data[i].fee_name + '</td>');
                     row.append('<td>' + data[i].payment + '</td>');
                     row.append('<td>' + data[i].date + '</td>');
                     childTable.append(row);
